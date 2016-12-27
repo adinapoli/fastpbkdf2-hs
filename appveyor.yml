@@ -10,11 +10,18 @@ before_test:
 
 clone_folder: "c:\\stack"
 environment:
+  platform: x64
+  os: MinGW
   global:
+    OPENSSL_VERSION: 1_0_2h
     STACK_ROOT: "c:\\sr"
 
+install:
+  - ps: Start-FileDownload "http://slproweb.com/download/Win32OpenSSL-$Env:OPENSSL_VERSION.exe"
+  - cmd: Win32OpenSSL-%OPENSSL_VERSION%.exe /silent /verysilent /sp- /suppressmsgboxes
+  - cmd: SET OPENSSL_LIB_DIR=C:\OpenSSL-Win32
+  - cmd: SET OPENSSL_INCLUDE_DIR=C:\OpenSSL-Win32\include 
+
 test_script:
-- stack setup > nul
-# The ugly echo "" hack is to avoid complaints about 0 being an invalid file
-# descriptor
-- echo "" | stack --no-terminal test
+  - stack setup > nul
+  - echo "" | stack --no-terminal test
