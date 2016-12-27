@@ -9,18 +9,18 @@ before_test:
 - 7z x stack.zip stack.exe
 
 clone_folder: "c:\\stack"
+platform: x64
+os: MinGW
 environment:
-  platform: x64
-  os: MinGW
+  OPENSSL_VERSION: 1_0_2h
   global:
-    OPENSSL_VERSION: 1_0_2h
     STACK_ROOT: "c:\\sr"
 
 install:
   - ps: Start-FileDownload "http://slproweb.com/download/Win32OpenSSL-$Env:OPENSSL_VERSION.exe"
   - cmd: Win32OpenSSL-%OPENSSL_VERSION%.exe /silent /verysilent /sp- /suppressmsgboxes
   - cmd: SET OPENSSL_LIB_DIR=C:\OpenSSL-Win32
-  - cmd: SET OPENSSL_INCLUDE_DIR=C:\OpenSSL-Win32\include 
+  - cmd: SET OPENSSL_INCLUDE_DIR=C:\OpenSSL-Win32\include
 
 test_script:
   - stack setup > nul
