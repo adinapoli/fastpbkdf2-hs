@@ -12,6 +12,7 @@ category:            Cryptography
 build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:  README.md
+                     include/fastpbkdf2.h
 
 library
   hs-source-dirs:      src
