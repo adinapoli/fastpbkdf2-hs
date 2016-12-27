@@ -24,4 +24,4 @@ install:
 
 test_script:
   - stack setup > nul
-  - echo "" | stack --no-terminal test
+  - echo "" | stack --no-terminal test --extra-include-dirs=C:\OpenSSL-Win32\include --extra-library-dirs=C:\OpenSSL-Win32
