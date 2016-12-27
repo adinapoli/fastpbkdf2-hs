@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/adinapoli/fastpbkdf2-hs.svg?branch=master)](https://travis-ci.org/adinapoli/fastpbkdf2-hs)
-[![Build status](https://ci.appveyor.com/api/projects/status/vj3d35qptms3q23w?svg=true)](https://ci.appveyor.com/project/adinapoli/rncryptor-hs)
+[![Build status](https://ci.appveyor.com/api/projects/status/3bkcrxd1m4xngerc?svg=true)](https://ci.appveyor.com/project/adinapoli/fastpbkdf2-hs)
 [![Coverage Status](https://coveralls.io/repos/github/adinapoli/fastpbkdf2-hs/badge.svg?branch=master)](https://coveralls.io/github/adinapoli/fastpbkdf2-hs?branch=master)
 
 ## fastpbkdf2-hs
