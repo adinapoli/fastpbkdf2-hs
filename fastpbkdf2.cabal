@@ -10,20 +10,29 @@ maintainer:          alfredo.dinapoli@gmail.com
 copyright:           2016 Alfredo Di Napoli
 category:            Cryptography
 build-type:          Simple
-extra-source-files:  README.md
 cabal-version:       >=1.10
+extra-source-files:  README.md
 
 library
   hs-source-dirs:      src
-  c-sources:           cbits/fastpbkdf2.c
+  c-sources: cbits/fastpbkdf2.c
   include-dirs:        include
-                       include/openssl
-  extra-lib-dirs:      /usr/local/opt/openssl/lib
-  extra-libraries:     crypto
   exposed-modules:     Crypto.KDF.PBKDF2
   build-depends:       base >= 4.7 && < 5
                      , bytestring >= 0.10.4.0
   default-language:    Haskell2010
+  if os(mingw32) || os(windows)
+    extra-libraries: eay32, ssl32
+  else
+    if os(osx)
+      include-dirs: /usr/local/opt/openssl/include
+      extra-lib-dirs: /usr/local/opt/openssl/lib
+    else
+      if arch(x86_64)
+        cpp-options: -D__x86_64__
+      if arch(i386)
+        cpp-options: -D__i386__
+    extra-libraries: crypto
 
 test-suite fastpbkdf2-hs-test
   type:                exitcode-stdio-1.0
