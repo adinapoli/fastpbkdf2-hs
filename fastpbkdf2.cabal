@@ -1,6 +1,6 @@
 name:                fastpbkdf2
 version:             0.1.0.0
-synopsis:            Initial project template from stack
+synopsis:            Haskell bindings to the fastpbkdf2 C library
 description:         Please see README.md
 homepage:            https://github.com/adinapoli/fastpbkdf2-hs#readme
 license:             BSD3
@@ -40,4 +40,4 @@ test-suite fastpbkdf2-hs-test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/fastpbkdf2-hs
+  location: https://github.com/adinapoli/fastpbkdf2-hs

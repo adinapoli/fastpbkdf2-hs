@@ -7,6 +7,7 @@ module Crypto.KDF.PBKDF2 (
 
 import Data.ByteString
 import Data.ByteString.Unsafe
+import Data.Monoid
 import Foreign.C.Types
 import Foreign.ForeignPtr
 import Foreign.Ptr
@@ -31,17 +32,24 @@ fastpbkdf2_fn :: Signature
               -- ^ The length (in bytes) of the output
               -> ByteString
 fastpbkdf2_fn fn password salt iterations keyLen = unsafeDupablePerformIO $ do
-  let outSize = CSize (fromIntegral keyLen)
-  outForeignPtr <- mallocForeignPtrBytes keyLen
-  withForeignPtr outForeignPtr $ \ptrOut -> do
-    unsafeUseAsCStringLen password $ \(passwordPtr, passwordSizeInt) -> do
-      unsafeUseAsCStringLen salt   $ \(saltPtr, saltSizeInt) -> do
-        let passwordSize = CSize (fromIntegral passwordSizeInt)
-        let saltSize     = CSize (fromIntegral saltSizeInt)
-        let iters        = CInt (fromIntegral iterations)
-        fn passwordPtr passwordSize saltPtr saltSize iters ptrOut outSize
-        unsafePackCStringLen (ptrOut, keyLen)
+  withPositive (iterations, keyLen) $ do
+    let outSize = CSize (fromIntegral keyLen)
+    outForeignPtr <- mallocForeignPtrBytes keyLen
+    withForeignPtr outForeignPtr $ \ptrOut -> do
+      unsafeUseAsCStringLen password $ \(passwordPtr, passwordSizeInt) -> do
+        unsafeUseAsCStringLen salt   $ \(saltPtr, saltSizeInt) -> do
+          let passwordSize = CSize (fromIntegral passwordSizeInt)
+          let saltSize     = CSize (fromIntegral saltSizeInt)
+          let iters        = CInt (fromIntegral iterations)
+          fn passwordPtr passwordSize saltPtr saltSize iters ptrOut outSize
+          unsafePackCStringLen (ptrOut, keyLen)
 {-# NOINLINE fastpbkdf2_fn #-}
+
+withPositive :: (Int, Int) -> IO a -> IO a
+withPositive (iter, keyLen) action
+  | iter   <= 0 = error $ "fastpbkdf2: iteration count must be > 0 (it was " <> show iter <> ")"
+  | keyLen <= 0 = error $ "fastpbkdf2: key length must be > 0 (it was " <> show keyLen <> ")"
+  | otherwise = action
 
 --------------------------------------------------------------------------------
 fastpbkdf2_hmac_sha1 :: ByteString
@@ -54,7 +62,7 @@ fastpbkdf2_hmac_sha1 :: ByteString
                      -- ^ The length (in bytes) of the output
                      -> ByteString
 fastpbkdf2_hmac_sha1 = fastpbkdf2_fn c_fastpbkdf2_hmac_sha1
-{-# NOINLINE fastpbkdf2_hmac_sha1 #-}
+{-# INLINE fastpbkdf2_hmac_sha1 #-}
 
 --------------------------------------------------------------------------------
 fastpbkdf2_hmac_sha256 :: ByteString
@@ -67,7 +75,7 @@ fastpbkdf2_hmac_sha256 :: ByteString
                      -- ^ The length (in bytes) of the output
                      -> ByteString
 fastpbkdf2_hmac_sha256 = fastpbkdf2_fn c_fastpbkdf2_hmac_sha256
-{-# NOINLINE fastpbkdf2_hmac_sha256 #-}
+{-# INLINE fastpbkdf2_hmac_sha256 #-}
 
 --------------------------------------------------------------------------------
 fastpbkdf2_hmac_sha512 :: ByteString
@@ -80,4 +88,4 @@ fastpbkdf2_hmac_sha512 :: ByteString
                      -- ^ The length (in bytes) of the output
                      -> ByteString
 fastpbkdf2_hmac_sha512 = fastpbkdf2_fn c_fastpbkdf2_hmac_sha512
-{-# NOINLINE fastpbkdf2_hmac_sha512 #-}
+{-# INLINE fastpbkdf2_hmac_sha512 #-}
