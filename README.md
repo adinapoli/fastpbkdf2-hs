@@ -4,7 +4,31 @@
 
 ## fastpbkdf2-hs
 
-Haskell bindings to the [fastpbkdf2](https://github.com/ctz/fastpbkdf2) library.
+Haskell bindings to the [fastpbkdf2](https://github.com/ctz/fastpbkdf2) library. This is currently (Dec 2016) the
+*fastest* Haskell library for computing the `pbkdf2`, outperforming competitors by several order of magnitude (unsuprisingly,
+as it hooks into some C code!):
+
+```
+benchmarking sha1/fastpbkdf2
+time                 4.948 ms   (4.850 ms .. 5.040 ms)
+                     0.998 R²   (0.997 R² .. 0.999 R²)
+mean                 4.767 ms   (4.707 ms .. 4.825 ms)
+std dev              186.5 μs   (152.3 μs .. 244.2 μs)
+variance introduced by outliers: 20% (moderately inflated)
+
+benchmarking sha1/cryptonite
+time                 29.61 ms   (29.04 ms .. 30.03 ms)
+                     0.999 R²   (0.997 R² .. 1.000 R²)
+mean                 29.82 ms   (29.47 ms .. 30.40 ms)
+std dev              916.0 μs   (527.1 μs .. 1.579 ms)
+
+benchmarking sha1/pbkdf2
+time                 8.032 s    (7.899 s .. 8.248 s)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 7.941 s    (7.911 s .. 7.995 s)
+std dev              47.08 ms   (0.0 s .. 48.71 ms)
+variance introduced by outliers: 19% (moderately inflated)
+```
 
 ### Installation
 
